@@ -1,0 +1,93 @@
+<html>
+<head>
+  <title>Service Status Dashboard</title>
+  <style type="text/css">
+    body {
+      font: 14px/18px "Helvetica Neue", Helvetica, sans-serif;
+      margin: 20px 50px;
+    }
+    h1 {
+      font: 32px/38px;
+      text-align: center;
+      margin-bottom: 0;
+    }
+    h2 {
+      font: 20px/26px;
+      color: #fff;
+      margin-bottom: 10px;
+      background-color: #666;
+      width: 400px;
+      padding: 6px;
+    }
+    h3 {
+      display: inline;
+      float: left;
+      font-size: 16px;
+      line-height: 34px;
+      font-weight: bold;
+      width: 140px;
+      margin: 0;
+    }
+    a {
+      color: black;
+    }
+    div.hostgroup {
+      clear: both;
+    }
+    div.even {
+      background-color: #fff;
+    }
+    div.odd {
+      background-color: #eee;
+    }
+    div.host {
+      padding-left: 15px;
+      clear: both;
+      height: 34px;
+    }
+    div.lozenge {
+      display: block;
+      float: left;
+      background-color: #eee;
+      border: 2px solid gray;
+      border-radius: 5px;
+      width: auto;
+      margin: 4px 4px;
+    }
+    div.status {
+      display: block;
+      float: left;
+      width: 15px;
+      padding: 2px;
+      border-radius: 3px 0 0 3px;
+      font-size: 10px;
+      text-align: center;
+      font-weight: bold;
+      color: white;
+    }
+    div.service {
+      display: block;
+      float: left;
+      padding: 2px 6px;
+    }
+    .lozenge.stopped {
+      border-color: #cc3333;
+    }
+    .status.stopped {
+      background-color: #cc3333;
+    }
+    .lozenge.running {
+      border-color: #669966;
+    }
+    .status.running {
+      background-color: #669966;
+    }
+    </style>
+</head>
+<body>
+  <h1>Service Status Dashboard</h1>
+  <p style="text-align: center"><em>Updated <%= Time.now %><br />Total hosts: <%= total_hosts %> - Total deployed services: <%= total_services %></em></p>
+  <%= html %>
+  <div style="clear: both"><br /><br /></div>
+</body>
+</html>
