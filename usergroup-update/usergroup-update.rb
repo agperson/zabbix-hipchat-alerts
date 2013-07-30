@@ -3,31 +3,17 @@
 require 'rubygems'
 require 'rubix'
 require 'ldap'
+require 'yaml'
 
-# List of LDAP groups to synchronize
-groups = [
-  "group1",
-  "group2"
-]
+# Load Zabbix connection details from config file and connect
+config = YAML.load_file(File.join(File.dirname(__FILE__), 'config.yaml'))
+zabbix = Rubix.connect(config['zabbix']['host'], config['zabbix']['user'], config['zabbix']['pass'])
 
-# Zabbix login credentials
-api_dest = "https://zabbix.mycompany.com/zabbix/api_jsonrpc.php"
-api_user = "admin"
-api_pass = "password"
-
-# LDAP query parameters
-ldap_host   = "ldap.mycompany.com"
-ldap_base   = "ou=People,dc=mycompany,dc=com"
-ldap_scope  = LDAP::LDAP_SCOPE_SUBTREE
-
-# Connect to LDAP
-ldap = LDAP::Conn.new(ldap_host, 389)
-
-# Login to Zabbix server
-zabbix = Rubix.connect(api_dest, api_user, api_pass)
+# Connect to LDAP server
+ldap = LDAP::Conn.new(config['ldap']['host'], config['ldap']['port'])
 
 # Iterate through each group
-groups.each do |group|
+config['groups'].each do |group|
   # Find the group in Zabbix.  If it does not exist, create it.
   response = zabbix.request('usergroup.get', 'filter' => { 'name' => group } )
 
@@ -45,7 +31,7 @@ groups.each do |group|
   ldap_membership = []
 
   begin
-    ldap.search(ldap_base, ldap_scope, filter, attrs) do |entry|
+    ldap.search(config['ldap']['base'], LDAP::LDAP_SCOPE_SUBTREE, filter, attrs) do |entry|
       ldap_members = entry.vals('memberUid')
 
       # Remove DN results and keep just short username results
@@ -55,7 +41,7 @@ groups.each do |group|
         filter = "(&(objectclass=posixAccount)(uid=#{user}))"
         attrs  = [ "uid", "givenName", "sn", "mail" ] 
         begin
-          ldap.search(ldap_base, ldap_scope, filter, attrs) do |entry|
+          ldap.search(config['ldap']['base'], LDAP::LDAP_SCOPE_SUBTREE, filter, attrs) do |entry|
             ldap_membership << entry.to_hash
           end
         rescue LDAP::ResultError
@@ -99,7 +85,7 @@ groups.each do |group|
 
   # Mass update Zabbix group membership (Zabbix will automatically add/remove
   # users to achieve this result).
-  puts "Mass updating group #{group}."
+  puts "Updating group #{group}"
   response = zabbix.request('usergroup.massupdate',
     "usrgrpids" => grpid,
     "userids"   => userids

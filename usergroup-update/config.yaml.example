@@ -1,0 +1,12 @@
+zabbix:
+  host: 'https://zabbix.mycompany.com/zabbix/api_jsonrpc.php'
+  user: 'admin'
+  pass: 'secret'
+ldap:
+  host: 'ldap.company.com'
+  port: 389
+  base: 'ou=People,dc=mycompany,dc=com'
+groups:
+  - 'group1'
+  - 'group2'
+  - 'group3'
