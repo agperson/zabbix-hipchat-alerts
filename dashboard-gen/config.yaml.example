@@ -6,3 +6,4 @@ hostgroups:
   - 'Production Servers'
   - 'Staging Servers'
   - 'Integration Servers'
+page_title: 'Service Status Dashboard'

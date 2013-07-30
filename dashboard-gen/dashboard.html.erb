@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>Service Status Dashboard</title>
+  <title><%= config['page_title'] %></title>
   <style type="text/css">
     body {
       font: 14px/18px "Helvetica Neue", Helvetica, sans-serif;
@@ -85,7 +85,7 @@
     </style>
 </head>
 <body>
-  <h1>Service Status Dashboard</h1>
+  <h1><%= config['page_title'] %></h1>
   <p style="text-align: center"><em>Updated <%= Time.now %><br />Total hosts: <%= total_hosts %> - Total deployed services: <%= total_services %></em></p>
   <%= html %>
   <div style="clear: both"><br /><br /></div>

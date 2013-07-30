@@ -53,9 +53,7 @@ config['hostgroups'].each do |hostgroup|
   # Grab all the application items that belong to the given hostids
   response = zabbix.request('item.get', 'hostids' => hosts.keys, 'application' => config['application'], 'output' => ['key_', 'name', 'lastvalue'])
 
-  # For now we strip out the memory items and only keep the process items
   items = response.result
-  items.reject! { |i| i['key_'] !~ /^proc\.num\[,web-.*\]/ }
 
   # Link up each item with its host
   items.each do |i|
