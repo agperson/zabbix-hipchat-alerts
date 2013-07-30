@@ -1,0 +1,8 @@
+host: 'https://zabbix.mycompany.com/zabbix/api_jsonrpc.php'
+user: 'admin'
+pass: 'secret'
+application: 'Deployed Services'
+hostgroups:
+  - 'Production Servers'
+  - 'Staging Servers'
+  - 'Integration Servers'

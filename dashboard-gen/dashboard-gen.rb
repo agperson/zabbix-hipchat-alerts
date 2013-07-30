@@ -3,23 +3,14 @@
 require 'rubygems'
 require 'rubix'
 require 'erb'
+require 'yaml'
 
-# Zabbix login credentials
-api_dest = "https://zabbix.mycompany.com/zabbix/api_jsonrpc.php"
-api_user = "admin"
-api_pass = "password"
-
-# List of Zabbix hostgroups to query
-groups = [
-  'Production App Servers',
-  'Staging App Servers',
-]
-
-# Application name
-application = 'Deployed Services'
+# Load Zabbix connection details from config file and connect
+config = YAML.load_file(File.join(File.dirname(__FILE__), 'config.yaml'))
+zabbix = Rubix.connect(config['host'], config['user'], config['pass'])
 
 # HTML template file
-template = './dashboard.html.erb'
+template = File.join(File.dirname(__FILE__), 'dashboard.html.erb')
 
 # Delcare some variables
 html = ""
@@ -39,11 +30,8 @@ def lozenge(host, service, port, processes)
   EOL
 end
 
-# Login to Zabbix server
-zabbix = Rubix.connect(api_dest, api_user, api_pass)
-
 # Iterate through each group
-groups.each do |hostgroup|
+config['hostgroups'].each do |hostgroup|
   # Reset variables on each run
   hosts = {}
   counter = 0
@@ -63,7 +51,11 @@ groups.each do |hostgroup|
   end
 
   # Grab all the application items that belong to the given hostids
-  response = zabbix.request('item.get', 'hostids' => hosts.keys, 'application' => application, 'output' => ['key_', 'name', 'lastvalue'])
+  response = zabbix.request('item.get', 'hostids' => hosts.keys, 'application' => config['application'], 'output' => ['key_', 'name', 'lastvalue'])
+
+  # For now we strip out the memory items and only keep the process items
+  items = response.result
+  items.reject! { |i| i['key_'] !~ /^proc\.num\[,web-.*\]/ }
 
   # Link up each item with its host
   items.each do |i|
