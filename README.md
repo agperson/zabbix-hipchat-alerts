@@ -15,6 +15,17 @@ necessary) to keep the Zabbix accounts in sync with LDAP.  Assumes LDAP
 authentication is enabled for login.  Requires the Rubix gem and may require
 tweaking to work with a given LDAP server.
 
+hipchat-alerts
+-----------------------
+
+Send Zabbix alerts to a HipChat room using the v2 API. Move this directory under `/usr/lib/zabbix/alertscripts` (or your configured alertscript location) and setup a new "media" of type script that calls hipchat.sh. Assign this media to a resource account, then setup one or more actions. Use this format for the subject line so that the hipchat.sh script will parse it, and your own message body:
+```
+{TRIGGER.STATUS}: {TRIGGER.NAME} ({TRIGGER.SEVERITY})
+```
+Be sure to configure the config.yaml file with your generated token and other information, then you will get nice color-coded messages in your chat room when Zabbix actions are fired.
+
+**Note:** The notify.rb script can be used on its own without Zabbix as a simple command-line notification script for the HipChat v2 API.
+
 dashboard-gen
 -----------------------
 
