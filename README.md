@@ -18,13 +18,20 @@ tweaking to work with a given LDAP server.
 hipchat-alerts
 -----------------------
 
-Send Zabbix alerts to a HipChat room using the v2 API. Move this directory under `/usr/lib/zabbix/alertscripts` (or your configured alertscript location) and setup a new "media" of type script that calls hipchat.sh. Assign this media to a resource account, then setup one or more actions. Use this format for the subject line so that the hipchat.sh script will parse it, and your own message body:
+Send Zabbix alerts to a HipChat room using the v2 API. Move this directory under `/usr/lib/zabbix/alertscripts` (or your configured alertscript location) and setup a new "media" of type script that calls hipchat.rb. Assign this media to a resource account with adequate (read-only) permissions, then setup one or more actions. The title does not matter, just make sure the body of the message is the following (same as what PagerDuty uses but with spaces so it will parse as YAML):
 ```
-{TRIGGER.STATUS}: {TRIGGER.NAME} ({TRIGGER.SEVERITY})
+name: {TRIGGER.NAME}
+id: {TRIGGER.ID}
+status: {TRIGGER.STATUS}
+hostname: {HOSTNAME}
+ip: {IPADDRESS}
+value: {TRIGGER.VALUE}
+event_id: {EVENT.ID}
+severity: {TRIGGER.SEVERITY}
 ```
 Be sure to configure the config.yaml file with your generated token and other information, then you will get nice color-coded messages in your chat room when Zabbix actions are fired.
 
-**Note:** The notify.rb script can be used on its own without Zabbix as a simple command-line notification script for the HipChat v2 API.
+**Note:** The `notify.rb` script can be used on its own without Zabbix as a simple command-line notification script for the HipChat v2 API. The `hipchat.rb` script is the one that is Zabbix-specific.
 
 dashboard-gen
 -----------------------
