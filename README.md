@@ -1,25 +1,18 @@
-zabbix-scripts
-==============
+zabbix-hipchat-alerts
+=====================
 
-Various utility scripts for use with Zabbix
+Send Zabbix alerts to a HipChat room using the v2 API.
 
-usergroup-update
------------------------
+![Zabbix notifications in HipChat](https://raw.githubusercontent.com/agperson/zabbix-hipchat-alerts/master/screenshot.png)
 
-Synchronize Zabbix group membership with LDAP group membership.  A list of LDAP
-groups is specified in the script along with connection details to both Zabbix
-and your LDAP directory.  The list of users is fetched from LDAP and compared to
-Zabbix.  If the group does not exist, it is created with the same name as the
-LDAP group.  Members are then added/removed as necessary (and created if
-necessary) to keep the Zabbix accounts in sync with LDAP.  Assumes LDAP
-authentication is enabled for login.  Requires the Rubix gem and may require
-tweaking to work with a given LDAP server.
+**Note:** The `notify.rb` script can be used on its own without Zabbix as a simple command-line notification script for the HipChat v2 API. The `hipchat.rb` script is the one that is Zabbix-specific.
 
-hipchat-alerts
------------------------
+1. Clone repository to your Zabbix alertscripts location (check `zabbix_server.conf` for the proper location, on RHEL/CentOS it is `/usr/lib/zabbix/alertscripts`), and make sure the Gemfile dependency is installed.
+2. In Zabbix navigate to Administration > Media Types and create a new media type called "HipChat".  For type select "Script" and for script name type in "hipchat.rb".
+3. Create a new user account or use an existing account with adequate (read-only) permissions. In the "Media" tab, create a new media of type "HipChat". The "Send To" field is not used but cannot be blank, so just put some text into it.
+4. Navigate to Configuration > Actions and create a new Trigger action. Setup the appropriate conditions and choose any Name and Subject you'd like.  For both the Default Message and the Recovery Message enter the following:
 
-Send Zabbix alerts to a HipChat room using the v2 API. Move this directory under `/usr/lib/zabbix/alertscripts` (or your configured alertscript location) and setup a new "media" of type script that calls hipchat.rb. Assign this media to a resource account with adequate (read-only) permissions, then setup one or more actions. The title does not matter, just make sure the body of the message is the following (same as what PagerDuty uses but with spaces so it will parse as YAML):
-```
+```yaml
 name: {TRIGGER.NAME}
 id: {TRIGGER.ID}
 status: {TRIGGER.STATUS}
@@ -29,22 +22,8 @@ value: {TRIGGER.VALUE}
 event_id: {EVENT.ID}
 severity: {TRIGGER.SEVERITY}
 ```
-Be sure to configure the config.yaml file with your generated token and other information, then you will get nice color-coded messages in your chat room when Zabbix actions are fired.
 
-**Note:** The `notify.rb` script can be used on its own without Zabbix as a simple command-line notification script for the HipChat v2 API. The `hipchat.rb` script is the one that is Zabbix-specific.
+(This format is the same as what PagerDuty uses, except that in this case there are spaces between the keys and values, to make it valid YAML.)
+5. Finally, in the "Operations" tab, setup an operation that sends a message to the user you have setup with the HipChat media, and choose "HipChat" from the "Send only to" dropdown.
 
-dashboard-gen
------------------------
-
-Generates a static web dashboard by pulling useful data out of Zabbix. This
-script is very specific to our use case, but may be useful to others looking
-to build similar functionality.  A cron job runs the script every 30 minutes
-to generate a pretty dashboard showing hosts and services.
-
-Hosts in our environment serve a variety of applications. Zabbix discovery
-rules are used to determine which application services are running on each
-host in the cluster. This script iterates through a specified list of
-hostgroups and collects a list of hosts into a hash. Then it iterates through
-items in a specified application and collects data relevant to the dashboard,
-injecting it into the hash.  The data is formatted and output via an ERB
-template.
+Be sure to configure an appropriate config.yaml file (an example is provided) with your generated token and other information, then you will get nice color-coded messages in your chat room when Zabbix actions are fired.
