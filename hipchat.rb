@@ -10,11 +10,11 @@ YAML.load(ARGV[2]).each { |k, v| instance_variable_set("@" + k, v) }
 
 if @status == "PROBLEM" then
 	case @severity
-		when "Warning":  color = "yellow"
-		when "Average":  color = "purple"
-		when "High":     color = "red"
-		when "Disaster": color = "red"
-		else            color = "gray"
+		when "Warning"  then color = "yellow"
+		when "Average"  then color = "purple"
+		when "High"     then color = "red"
+		when "Disaster" then color = "red"
+		else                 color = "gray"
 	end
 	message = "<strong>#{@status}: #{@name}</strong> (#{@severity})<br />host #{@hostname} [ <a href='#{url}/events.php?triggerid=#{@id}\'>Events</a> | <a href='#{url}/acknow.php?eventid=#{@event_id}'>Acknowledge</a> ]"
 else
