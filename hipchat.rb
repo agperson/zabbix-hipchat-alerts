@@ -7,7 +7,7 @@ alert_script = File.dirname(__FILE__) + "/notify.rb"
 
 # Load configuration
 config = YAML.load_file(File.join(File.dirname(__FILE__), 'config.yaml'))
-url = config['abbix_url']
+url = config['zabbix_url']
 
 YAML.load(ARGV[2]).each { |k, v| instance_variable_set("@" + k, v) }
 
