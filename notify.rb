@@ -22,9 +22,8 @@ options = Parser.new do |p|
   p.option :format,  "message format", :default => 'html', :value_in_set => [ 'html', 'text' ]
 end.process!
 
-p options
-
 puts "Sending message to #{endpoint} room #{room}" if options[:verbose]
+p options if options[:verbose]
 
 uri = URI.parse("https://#{endpoint}/v2/room/#{room}/notification?auth_token=#{token}")
 http = Net::HTTP.new(uri.host, uri.port)
