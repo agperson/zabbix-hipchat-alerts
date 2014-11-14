@@ -4,7 +4,10 @@ require 'rubygems'
 require 'yaml'
 
 alert_script = File.dirname(__FILE__) + "/notify.rb"
-url = "https://zabbix.example.com/zabbix"
+
+# Load configuration
+config = YAML.load_file(File.join(File.dirname(__FILE__), 'config.yaml'))
+url = config['zabbix_url']
 
 YAML.load(ARGV[2]).each { |k, v| instance_variable_set("@" + k, v) }
 
