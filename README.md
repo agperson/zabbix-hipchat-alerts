@@ -10,7 +10,7 @@ Send Zabbix alerts to a HipChat room using the v2 API.
 1. Clone repository to your Zabbix alertscripts location (check `zabbix_server.conf` for the proper location, on RHEL/CentOS it is `/usr/lib/zabbix/alertscripts`), and make sure the Gemfile dependency is installed.
 2. In Zabbix navigate to Administration > Media Types and create a new media type called "HipChat".  For type select "Script" and for script name type in "hipchat.rb".
 3. Create a new user account or use an existing account with adequate (read-only) permissions. In the "Media" tab, create a new media of type "HipChat". The "Send To" field is not used but cannot be blank, so just put some text into it.
-4. Navigate to Configuration > Actions and create a new Trigger action. Setup the appropriate conditions and choose any Name and Subject you'd like.  For both the Default Message and the Recovery Message enter the following:
+4. Navigate to Configuration > Actions and create a new Trigger action. Setup the appropriate conditions and choose any Name and Subject you'd like.  For both the Default Message and the Recovery Message enter the following (format inspired by PagerDuty's ouput format, slightly adjusted to be valid YAML):
 
 ```yaml
 name: "{TRIGGER.NAME}"
@@ -23,7 +23,6 @@ event_id: "{EVENT.ID}"
 severity: "{TRIGGER.SEVERITY}"
 ```
 
-(This format is inspired by PagerDuty's ouput format, slightly adjusted to be valid YAML.)
 5. Finally, in the "Operations" tab, setup an operation that sends a message to the user you have setup with the HipChat media, and choose "HipChat" from the "Send only to" dropdown.
 
-Be sure to configure an appropriate config.yaml file (an example is provided) with your generated token and other information, then you will get nice color-coded messages in your chat room when Zabbix actions are fired.
+Be sure to configure an appropriate `config.yaml` file (an example is provided) with your generated token and other information, then you will get nice color-coded messages in your chat room when Zabbix actions are fired.
