@@ -13,17 +13,17 @@ Send Zabbix alerts to a HipChat room using the v2 API.
 4. Navigate to Configuration > Actions and create a new Trigger action. Setup the appropriate conditions and choose any Name and Subject you'd like.  For both the Default Message and the Recovery Message enter the following:
 
 ```yaml
-name: {TRIGGER.NAME}
-id: {TRIGGER.ID}
-status: {TRIGGER.STATUS}
-hostname: {HOSTNAME}
-ip: {IPADDRESS}
-value: {TRIGGER.VALUE}
-event_id: {EVENT.ID}
-severity: {TRIGGER.SEVERITY}
+name: "{TRIGGER.NAME}"
+id: "{TRIGGER.ID}"
+status: "{TRIGGER.STATUS}"
+hostname: "{HOSTNAME}"
+ip: "{IPADDRESS}"
+value: "{TRIGGER.VALUE}"
+event_id: "{EVENT.ID}"
+severity: "{TRIGGER.SEVERITY}"
 ```
 
-(This format is the same as what PagerDuty uses, except that in this case there are spaces between the keys and values, to make it valid YAML.)
+(This format is inspired by PagerDuty's ouput format, slightly adjusted to be valid YAML.)
 5. Finally, in the "Operations" tab, setup an operation that sends a message to the user you have setup with the HipChat media, and choose "HipChat" from the "Send only to" dropdown.
 
 Be sure to configure an appropriate config.yaml file (an example is provided) with your generated token and other information, then you will get nice color-coded messages in your chat room when Zabbix actions are fired.
