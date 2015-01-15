@@ -1,4 +1,4 @@
-zabbix_url: https://zabbix.example.com/zabbix
-endpoint: api.hipchat.com
-room: 12345
-token: abcdefgabcdefgabcdefgabcdefg
+zabbix_url: "https://zabbix.example.com/zabbix"
+endpoint: "api.hipchat.com"
+room: "12345"
+token: "abcdefgabcdefgabcdefgabcdefg"
